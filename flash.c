@@ -24,6 +24,7 @@
      if (pid == 0) {
          char *argv[]={
              "wine",
+             "avrasm2.exe",
              "-fI", "-o", hex,
              asmf,
              NULL
