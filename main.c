@@ -6,7 +6,7 @@
 #include "flash.h"
 #include "libloader.h"
 #include "locator.h"
-#include "gflash.h"
+//#include "gflash.h"
 // gflash -p [processor] -r [port] -i [hex file]
 // automatic baud rates and ports?
 // locate arduino
@@ -112,16 +112,16 @@ int main(int argc, char* argv[]){
 
     if (opts.hex) {
         //printf("hex: %s\n", opts.hex);
-        int hxf_size = sizeof(opts.hex)+1;
+        int hxf_size = strlen(opts.hex);
         strncpy(optstring.hex, opts.hex, hxf_size);
 
         optstring.hex[hxf_size] = '\0';
-       // printf("hex %s\n", optstring.hex);
+        //printf("hex %s\n", optstring.hex);
     }
 
     if (opts.port) {
        // printf("user chose port: %s\n", opts.port);
-        int hxf_size = sizeof(opts.port)+1;
+        int hxf_size = strlen(opts.port);
         strncpy(optstring.port, opts.port, hxf_size);
 
         optstring.port[hxf_size] = '\0';
@@ -130,7 +130,7 @@ int main(int argc, char* argv[]){
         if (locate_usb(path, sizeof(path))==0) {
            // printf("Found Device: %s...\n", path);
 
-            int lp = sizeof(path)+1;
+            int lp = strlen(path)+1;
             strncpy(optstring.port, path, lp);
 
              printf("port %s\n", optstring.port);
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]){
 
     if (opts.processor) {
        // printf("processor: %s\n", opts.processor);
-       int hxf_size = sizeof(opts.processor)+1;
+       int hxf_size = strlen(opts.processor);
        strncpy(optstring.processor, opts.processor, hxf_size);
 
        optstring.processor[hxf_size] = '\0';
@@ -153,7 +153,7 @@ int main(int argc, char* argv[]){
 
     if (opts.asmf) {
         //printf("asm: %s", opts.asmf);
-        int hxf_size = sizeof(opts.asmf)+1;
+        int hxf_size = strlen(opts.asmf);
         strncpy(optstring.asmf, opts.asmf, hxf_size);
 
         optstring.asmf[hxf_size] = '\0';
@@ -161,8 +161,10 @@ int main(int argc, char* argv[]){
        // printf("assembly file %s\n", optstring.asmf);
     }
 
-    wine_fork(optstring.hex, optstring.asmf);
-    avrdude_fork(optstring.processor, optstring.port, optstring.hex);
+    // TODO: remove ".asm" from asmf string, and create a new string xxxx.hex
+
+    //wine_fork(optstring.hex, optstring.asmf);
+    //avrdude_fork(optstring.processor, optstring.port, optstring.hex);
 
 
 
