@@ -67,7 +67,7 @@
      if (pid == 0) {
          char *argv[] = {
              "avrdude",
-             "/opt/homebrew/Cellar/avrdude/8.1/.bottle/etc/avrdude.conf", "-v",
+             "-C","/opt/homebrew/Cellar/avrdude/8.1/.bottle/etc/avrdude.conf",
              "-p", processor,
              "-c", programmer,
              "-P", port,
