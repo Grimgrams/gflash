@@ -146,7 +146,7 @@ int main(int argc, char* argv[]){
     if (opts.inc) {
         char incpath[PATH_MAX];
         const char *home = getenv("HOME");
-        snprintf(incpath, sizeof(incpath), "%s/.local/lib/gflash/%s", home,opts.inc);
+        snprintf(incpath, sizeof(incpath), "%s/.wine/dosdevices/z:/Users/grimgram/.local/gflash/%s", home,opts.inc);
         int inc_s = strlen(incpath);
         strncpy(optstring.inc, incpath, inc_s);
         //printf("\n\n%s\n\n", optstring.inc);
@@ -201,7 +201,7 @@ int main(int argc, char* argv[]){
             int lp = strlen(path)+1;
             strncpy(optstring.port, path, lp);
 
-             printf("port %s\n", optstring.port);
+             //printf("port %s\n", optstring.port);
         } else {
             printf("No device connected...\n");
             //exit(EXIT_FAILURE);
