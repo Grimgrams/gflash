@@ -148,12 +148,18 @@ int main(int argc, char* argv[]){
         int inc_s = strlen(incpath);
         strncpy(optstring.inc, incpath, inc_s);
         //printf("\n\n%s\n\n", optstring.inc);
+    } else if (opts.wild) {
+        int wild_s = strlen(opts.wild);
+        strncpy(optstring.inc, opts.wild, wild_s);
+        //printf("\n\n%s gb\n\n",optstring.inc);
     }
 
+    /*
     if (opts.wild) {
         int wild_s = strlen(opts.wild);
         strncpy(optstring.wild, opts.wild, wild_s);
     }
+    */
 
 
 
