@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/syslimits.h>
 #include <unistd.h>
 
 #include "flash.h"
@@ -143,7 +144,7 @@ int main(int argc, char* argv[]){
         exit(EXIT_FAILURE);
     }
     if (opts.inc) {
-        char incpath[125];
+        char incpath[PATH_MAX];
         const char *home = getenv("HOME");
         snprintf(incpath, sizeof(incpath), "%s/.local/lib/gflash/%s", home,opts.inc);
         int inc_s = strlen(incpath);
@@ -209,7 +210,7 @@ int main(int argc, char* argv[]){
 
     int len = strlen(optstring.asmf);
     int j, k;
-    char hold[25];
+    char hold[PATH_MAX];
 
     strcpy(hold, optstring.asmf);
 
