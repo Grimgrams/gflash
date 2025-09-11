@@ -157,19 +157,25 @@ int main(int argc, char* argv[]){
         }
     }
 
+    if (opts.inc && opts.wild) {
+        printf("Only use one, either '-w' or '-i', later implementations will allow both.");
+        exit(EXIT_FAILURE);
+    }
     if (opts.inc) {
         char incpath[125];
         const char *home = getenv("HOME");
         snprintf(incpath, sizeof(incpath), "%s/.local/lib/gflash/%s", home,opts.inc);
         int inc_s = strlen(incpath);
         strncpy(optstring.inc, incpath, inc_s);
-        printf("\n\n%s\n\n", optstring.inc);
+        //printf("\n\n%s\n\n", optstring.inc);
     }
 
     if (opts.wild) {
         int wild_s = strlen(opts.wild);
         strncpy(optstring.wild, opts.wild, wild_s);
     }
+
+
 
 
     if (opts.processor) {
