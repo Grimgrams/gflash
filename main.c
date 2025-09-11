@@ -158,8 +158,12 @@ int main(int argc, char* argv[]){
     }
 
     if (opts.inc) {
-        int inc_s = strlen(opts.inc);
-        strncpy(optstring.inc, opts.inc, inc_s);
+        char incpath[125];
+        const char *home = getenv("HOME");
+        snprintf(incpath, sizeof(incpath), "%s/.local/lib/gflash/%s", home,opts.inc);
+        int inc_s = strlen(incpath);
+        strncpy(optstring.inc, incpath, inc_s);
+        printf("\n\n%s\n\n", optstring.inc);
     }
 
     if (opts.wild) {
@@ -188,7 +192,6 @@ int main(int argc, char* argv[]){
        // printf("assembly file %s\n", optstring.asmf);
     }
 
-    // TODO: remove ".asm" from asmf string, and create a new string xxxx.hex
 
     int len = strlen(optstring.asmf);
     int j, k;
@@ -209,8 +212,8 @@ int main(int argc, char* argv[]){
         }
 
     //fprintf(stdout,"\n+++%s+++\n", hold);
-    wine_fork(hold, optstring.asmf);
-    avrdude_fork(optstring.processor, optstring.port, hold);
+   // wine_fork(hold, optstring.asmf);
+   // avrdude_fork(optstring.processor, optstring.port, hold);
 
     return 0;
 }
