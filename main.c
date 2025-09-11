@@ -136,26 +136,6 @@ int main(int argc, char* argv[]){
         //printf("hex %s\n", optstring.hex);
     }
 
-    if (opts.port) {
-       // printf("user chose port: %s\n", opts.port);
-        int hxf_size = strlen(opts.port);
-        strncpy(optstring.port, opts.port, hxf_size);
-
-        optstring.port[hxf_size] = '\0';
-       // printf("port %s\n", optstring.port);
-    } else {
-        if (locate_usb(path, sizeof(path))==0) {
-           // printf("Found Device: %s...\n", path);
-
-            int lp = strlen(path)+1;
-            strncpy(optstring.port, path, lp);
-
-             printf("port %s\n", optstring.port);
-        } else {
-            printf("No device connected...\n");
-            //exit(EXIT_FAILURE);
-        }
-    }
 
     if (opts.inc && opts.wild) {
         printf("Only use one, either '-w' or '-i', later implementations will allow both.");
@@ -198,6 +178,27 @@ int main(int argc, char* argv[]){
        // printf("assembly file %s\n", optstring.asmf);
     }
 
+
+    if (opts.port) {
+       // printf("user chose port: %s\n", opts.port);
+        int hxf_size = strlen(opts.port);
+        strncpy(optstring.port, opts.port, hxf_size);
+
+        optstring.port[hxf_size] = '\0';
+       // printf("port %s\n", optstring.port);
+    } else {
+        if (locate_usb(path, sizeof(path))==0) {
+           // printf("Found Device: %s...\n", path);
+
+            int lp = strlen(path)+1;
+            strncpy(optstring.port, path, lp);
+
+             printf("port %s\n", optstring.port);
+        } else {
+            printf("No device connected...\n");
+            //exit(EXIT_FAILURE);
+        }
+    }
 
     int len = strlen(optstring.asmf);
     int j, k;
