@@ -13,18 +13,22 @@
  * avrdude -p m328p -c arduino -P /dev/cu.usbmodemxxxx -b 115200 -U flash:w:<name>.hex
  */
 
+ OptionStrings optString;
+
  int wine_fork(char *hex, char *asmf){
      pid_t pid = fork();
 
-     if (pid == -1) {
+    if (pid == -1) {
          perror("fork");
          exit(EXIT_FAILURE);
      }
 
      if (pid == 0) {
+         // find lib
          char *argv[]={
              "wine",
              "avrasm2.exe",
+             "-I", optString.inc,
              "-fI", "-o", hex,
              asmf,
              NULL
