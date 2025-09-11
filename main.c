@@ -125,6 +125,7 @@ int main(int argc, char* argv[]){
     if (opts.copy) {
       //  printf("coping file: %s\n", opts.copy);
         copylib(opts.copy);
+        exit(EXIT_SUCCESS);
     }
 
     if (opts.hex) {
