@@ -225,8 +225,8 @@ int main(int argc, char* argv[]){
         }
 
     //fprintf(stdout,"\n+++%s+++\n", hold);
-   // wine_fork(hold, optstring.asmf);
-   // avrdude_fork(optstring.processor, optstring.port, hold);
+   wine_fork(hold, optstring.asmf);
+   avrdude_fork(optstring.processor, optstring.port, hold);
 
     return 0;
 }
