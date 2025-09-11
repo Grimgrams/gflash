@@ -18,7 +18,7 @@ int locate_usb(char * result, size_t size){
     }
 
     while ((entry = readdir(dp))) {
-        if (strncmp(entry->d_name, "cu.usbmodem",11)==0) {
+        if (strncmp(entry->d_name, "cu.usbmodem1",12)==0) {
             snprintf(result, size, "%s/%s", devdir, entry->d_name);
             //printf("Found: %s/%s\n", devdir, entry->d_name);
             return 0;
