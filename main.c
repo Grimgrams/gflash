@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #include "flash.h"
 #include "libloader.h"
@@ -19,11 +20,14 @@ typedef struct{
     char* hex;
     char* copy;
     char* asmf;
+    char* inc;
+    char *wild;
     int count;
     char **positionals;
     int n_pos;
 }Options ;
 
+// TODO: add include file...
 Options parse_args(int argc, char *argv[]){
     Options opts = {0};
     opts.positionals = malloc(sizeof(char*) * argc);
@@ -50,7 +54,7 @@ Options parse_args(int argc, char *argv[]){
                 fprintf(stderr, "Error: %s requires a value\n", arg);
                         exit(1);
             }
-        } else if (strcmp(arg, "-i")==0) {
+        } else if (strcmp(arg, "-x")==0) {
             //opts.hex = true;
             if (i+1 < argc) {
                 opts.hex = argv[++i];
@@ -74,7 +78,22 @@ Options parse_args(int argc, char *argv[]){
                 fprintf(stderr, "Error: %s requires a value\n", arg);
                 exit(1);
             }
-        } else {
+        } else if (strcmp(arg, "-i")==0) {
+            if (i+1 < argc) {
+                opts.inc = argv[++i];
+            } else {
+                fprintf(stderr, "Error: %s requires a value\n", arg);
+                exit(1);
+            }
+        } else if (strcmp(arg, "-w")==0) {
+            if (i+1 < argc) {
+                opts.wild = argv[++i];
+            } else {
+                fprintf(stderr, "Error: %s requires a value\n", arg);
+                exit(1);
+            }
+        }
+        else {
             opts.positionals[opts.n_pos] = arg;
         }
     }
@@ -82,12 +101,15 @@ Options parse_args(int argc, char *argv[]){
 }
 
 void helper(const char parg[]){
-    fprintf(stderr, "USAGE: %s [flag] [value]\n\
+    fprintf(stderr, "USAGE: [flag] [value]\n\
         -p\t\t Processor 'atmega328p...'\n\
         -r\t\t Port '/dev/cu.usbmodem1xxxx'\n\
-        -i\t\t Hex input file 'file.hex'\n\
+        -x\t\t Hex input file 'file.hex'\n\
         -a\t\t Assembly File\n\
-        -c\t\t Copy lib file\n", parg);
+        -i\t\t Include file ** IF THE FILE IS ALREADY COPIED WITH THE '-c' OPTION JUST WRITE THE FILE NAME WITHOUT THE PATH\n\
+        -w\t\t If you dont want to copy an include/header file just use this flag with the full path EX: [~/Downloads/some_folder/header.inc]\n\
+        -c\t\t Copy lib file\n\
+        \n\nEXAMPLE: gflash -p atmega328p -r /dev/cu.usbmodem1134201 -a file.asm -i m328pdef.inc\n");
 }
 
 int main(int argc, char* argv[]){
@@ -96,13 +118,8 @@ int main(int argc, char* argv[]){
     char path[265];
 
     if (opts.help) {
-        fprintf(stderr, "USAGE: [flag] [value]\n\
-            -p\t\t Processor 'atmega328p...'\n\
-            -r\t\t Port '/dev/cu.usbmodem1xxxx'\n\
-            -i\t\t Hex input file 'file.hex'\n\
-            -a\t\t Assembly File\n\
-            -c\t\t Copy lib file\n");
-        exit(EXIT_FAILURE);
+        helper(argv[0]);
+        exit(EXIT_SUCCESS);
     }
 
     if (opts.copy) {
@@ -140,6 +157,16 @@ int main(int argc, char* argv[]){
         }
     }
 
+    if (opts.inc) {
+        int inc_s = strlen(opts.inc);
+        strncpy(optstring.inc, opts.inc, inc_s);
+    }
+
+    if (opts.wild) {
+        int wild_s = strlen(opts.wild);
+        strncpy(optstring.wild, opts.wild, wild_s);
+    }
+
 
     if (opts.processor) {
        // printf("processor: %s\n", opts.processor);
@@ -163,15 +190,27 @@ int main(int argc, char* argv[]){
 
     // TODO: remove ".asm" from asmf string, and create a new string xxxx.hex
 
-    //wine_fork(optstring.hex, optstring.asmf);
-    //avrdude_fork(optstring.processor, optstring.port, optstring.hex);
+    int len = strlen(optstring.asmf);
+    int j, k;
+    char hold[25];
 
+    strcpy(hold, optstring.asmf);
 
+    if (len> 4 && strcmp(hold+len-4, ".asm")==0) {
+        hold[len-4] = '\0';
+    }
+    char ext[] = ".hex";
+    strcat(hold, ext);
 
     if (argc < 3) {
         fprintf(stderr, "Too few arguments\n");
         helper(argv[0]);
         exit(EXIT_FAILURE);
         }
+
+    //fprintf(stdout,"\n+++%s+++\n", hold);
+    wine_fork(hold, optstring.asmf);
+    avrdude_fork(optstring.processor, optstring.port, hold);
+
     return 0;
 }
